@@ -472,6 +472,26 @@ require('lazy').setup({
       vim.keymap.set('n', '<leader>sn', function()
         builtin.find_files { cwd = vim.fn.stdpath 'config' }
       end, { desc = '[S]earch [N]eovim files' })
+      -- Shortcut for searching files in the current project (root where .git is located)
+      vim.keymap.set('n', '<leader>sp', function()
+        local project_root = vim.fs.root(0, { '.git' })
+        if project_root then
+          builtin.find_files { cwd = project_root }
+        else
+          -- Fallback to current working directory if .git isn't found
+          builtin.find_files()
+        end
+      end, { desc = '[S]earch [P]roject Files' })
+      -- Shortcut for searching text (Grep) in the current project root (.git)
+      vim.keymap.set('n', '<leader>sc', function()
+        local project_root = vim.fs.root(0, { '.git' })
+        if project_root then
+          builtin.live_grep { cwd = project_root }
+        else
+          -- Fallback to current working directory
+          builtin.live_grep()
+        end
+      end, { desc = '[S]earch [C]urrent Project by Grep' })
     end,
   },
 
