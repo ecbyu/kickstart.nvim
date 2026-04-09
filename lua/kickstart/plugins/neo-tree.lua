@@ -6,7 +6,7 @@ return {
   version = '*',
   dependencies = {
     'nvim-lua/plenary.nvim',
-    'nvim-tree/nvim-web-devicons', -- not strictly required, but recommended
+    'nvim-tree/nvim-web-devicons',
     'MunifTanjim/nui.nvim',
   },
   lazy = false,
@@ -18,7 +18,28 @@ return {
       window = {
         mappings = {
           ['<leader>n'] = 'close_window',
+          -- Add your new search mappings here
+          ['tf'] = 'telescope_find',
+          ['tg'] = 'telescope_grep',
         },
+      },
+      commands = {
+        -- Custom command to find files in the current Neo-tree directory
+        telescope_find = function(state)
+          local node = state.tree:get_node()
+          local path = node.type == 'directory' and node:get_id() or vim.fn.fnamemodify(node:get_id(), ':h')
+          require('telescope.builtin').find_files {
+            cwd = path,
+          }
+        end,
+        -- Custom command to grep in the current Neo-tree directory
+        telescope_grep = function(state)
+          local node = state.tree:get_node()
+          local path = node.type == 'directory' and node:get_id() or vim.fn.fnamemodify(node:get_id(), ':h')
+          require('telescope.builtin').live_grep {
+            cwd = path,
+          }
+        end,
       },
     },
   },

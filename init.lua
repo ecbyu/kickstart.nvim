@@ -486,7 +486,9 @@ require('lazy').setup({
       vim.keymap.set('n', '<leader>sc', function()
         local project_root = vim.fs.root(0, { '.git' })
         if project_root then
-          builtin.live_grep { cwd = project_root }
+          builtin.live_grep {
+            cwd = project_root,
+          }
         else
           -- Fallback to current working directory
           builtin.live_grep()
